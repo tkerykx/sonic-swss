@@ -393,7 +393,7 @@ ref_resolve_status Orch::resolveFieldRefValue(
             {
                 return ref_resolve_status::not_resolved;
             }
-            else if (object_name.empty())
+            else if (ref_type_name.empty() && object_name.empty())
             {
                 return ref_resolve_status::empty;
             }
@@ -907,7 +907,19 @@ task_process_status Orch::handleSaiCreateStatus(sai_api_t api, sai_status_t stat
                                 sai_serialize_api(api).c_str(), sai_serialize_status(status).c_str());
                     abort();
             }
-        default:
+        case SAI_API_MIRROR:
+            switch (status)
+            {
+                case SAI_STATUS_SUCCESS:
+                    return task_success;
+                case SAI_STATUS_FAILURE:
+                    return task_ignore;
+                default:
+                    SWSS_LOG_ERROR("Encountered failure in create operation, exiting orchagent, SAI API: %s, status: %s",
+                                sai_serialize_api(api).c_str(), sai_serialize_status(status).c_str());
+                    abort();
+            }
+	default:
             switch (status)
             {
                 case SAI_STATUS_SUCCESS:
