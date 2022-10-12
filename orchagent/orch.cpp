@@ -393,7 +393,7 @@ ref_resolve_status Orch::resolveFieldRefValue(
             {
                 return ref_resolve_status::not_resolved;
             }
-            else if (ref_type_name.empty() && object_name.empty())
+            else if (object_name.empty())
             {
                 return ref_resolve_status::empty;
             }
@@ -919,7 +919,7 @@ task_process_status Orch::handleSaiCreateStatus(sai_api_t api, sai_status_t stat
                                 sai_serialize_api(api).c_str(), sai_serialize_status(status).c_str());
                     abort();
             }
-	default:
+        default:
             switch (status)
             {
                 case SAI_STATUS_SUCCESS:
